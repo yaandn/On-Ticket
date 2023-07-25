@@ -73,4 +73,6 @@ Ingressos lerIngresso();
 
 PonteiroShow escolherShow(ListaShows *lista);
 
+PonteiroIngressos escolherIngresso(ListaIngressos *Ingressos, ListaShows *Shows); 
+
 #endif

@@ -320,3 +320,38 @@ PonteiroShow escolherShow(ListaShows *lista)
         return atual;
     }
 }
+
+PonteiroIngressos escolherIngresso(ListaIngressos *Ingressos, ListaShows *Shows) {
+  PonteiroShow showEscolhido = escolherShow(Shows);
+  int codigoEscolhido;
+  printf("\nSelecione o tipo de ingresso:\n");
+
+  //percorrer a lista de ingressos até achar os ingressos do show escolhido
+  PonteiroIngressos atual = Ingressos->ptr_primeiro;
+
+  while (atual != NULL) {
+    if(atual->codIngresso == showEscolhido->codShow) {
+      printf("%d-", atual->codIngresso);
+      printf("  Tipo do ingresso: %s\n", atual->tipo);
+      printf("  Preço: R$ %.2f\n", atual->preco);
+    }
+
+    atual = atual->ptr_prox;
+  }
+
+  scanf("%d", &codigoEscolhido);
+
+  //percorrer a lista de ingressos para encontar o ingresso escolhido pelo usuario e o retornar
+  atual = Ingressos->ptr_primeiro;
+
+  while (atual != NULL) {
+    if(atual->codIngresso == codigoEscolhido) {
+      printf("Ingresso escolhido com sucesso, precione ENTER para voltar...\n");
+      getchar();
+      getchar();
+      return atual;
+    }
+
+    atual = atual->ptr_prox;
+  }
+}

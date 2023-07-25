@@ -141,6 +141,7 @@ TipoUser fazerLogin(ListaUsers *lista1, ListaUsers *lista2)
                 printf("\nAperte Enter para continuar...");
                 getchar();  // Captura o Enter pressionado
                 getchar();  // Pausa até o Enter ser pressionado novamente
+                usuarioEncontrado->usuario.reservas.indice = 0;
                 return usuarioEncontrado;
             }
             else
