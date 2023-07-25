@@ -1,8 +1,9 @@
 #ifndef USUARIOS_H
 #define USUARIOS_H
-
+#include "reserva.h"
 #include <stdio.h>
 #include <stdlib.h>
+
 
 
 //dados para fazer login
@@ -16,7 +17,7 @@ typedef struct Dados
     char nome[32];
     int Id;
     int privilegio;
-
+    MinhasReservas reservas;
 }Dados;
 
 //Cria as celulas para o tipo lista

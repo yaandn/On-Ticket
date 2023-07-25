@@ -65,8 +65,6 @@ void imprimirIngressos(ListaIngressos *lista, int codigoIngresso[10]);
 
 void liberarListasShows(ListaShows *lista, ListaIngressos *lista2);
 
-
-
 void lerData(Dia *data);
 
 Show lerShow();
