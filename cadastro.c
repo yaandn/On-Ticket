@@ -1,6 +1,7 @@
 #include "usuarios.h"
 #include "menus.h"
 #include "cadastro.h"
+#include "reserva.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -346,9 +347,6 @@ PonteiroIngressos escolherIngresso(ListaIngressos *Ingressos, ListaShows *Shows)
 
   while (atual != NULL) {
     if(atual->codIngresso == codigoEscolhido) {
-      printf("Ingresso escolhido com sucesso, precione ENTER para voltar...\n");
-      getchar();
-      getchar();
       return atual;
     }
 

@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "cadastro.h"
 #include "usuarios.h"
+#include "reserva.h"
 //imprime na tela as opçoes de login
 //1 faz login
 //2 faz cadastro de usuarios
@@ -21,7 +22,7 @@ int login( ListaUsers *users, ListaUsers *admins, TipoUser *usuario );
 //4 faz logoff do sistema
 void printMenuUsuario();
 //processa a escolha feito pelo usuario logado
-int MenuUsuario( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos);
+int MenuUsuario( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos, ReservasUser *reservas);
 
 //caso o usuario tenha escolhido alterar os dados aparece este menu
 //1 para alterar o nome

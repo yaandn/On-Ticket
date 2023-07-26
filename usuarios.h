@@ -1,6 +1,6 @@
 #ifndef USUARIOS_H
 #define USUARIOS_H
-#include "reserva.h"
+#include "cadastro.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,7 +15,6 @@ typedef struct Dados
     char nome[32];
     int Id;
     int privilegio;
-    MinhasReservas reservas;
 }Dados;
 
 //Cria as celulas para o tipo lista
@@ -75,5 +74,9 @@ void carregarDadosUsuarios(ListaUsers *lista1, ListaUsers *lista2, FILE *arquivo
 void alteraNome( TipoUser *usuario );
 
 void alteraSenha( TipoUser *usuario );
+
+
+
+
 
 #endif

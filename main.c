@@ -4,6 +4,7 @@
 #include "usuarios.h"
 #include "menus.h"
 #include "cadastro.h"
+#include "reserva.h"
 
 
 
@@ -14,9 +15,13 @@ int main()
   ListaUsers users;
   ListaUsers admins;
   TipoUser usuario = NULL;
+  ReservasUser *reservas;
+  
 
   iniciaListaUsuarios(&users);
   iniciaListaUsuarios(&admins);
+  reservas = inicializaReserva(reservas);
+  
 
   ListaShows shows;
   ListaIngressos ingressos;
@@ -53,7 +58,7 @@ int main()
     //entra no programa como um usuario
     if (usuario != NULL && usuario->usuario.privilegio==0)
     {
-      if (MenuUsuario(&usuario, &shows, &ingressos))
+      if (MenuUsuario(&usuario, &shows, &ingressos, reservas))
         break;
     }
     //entra no programa como um administrador

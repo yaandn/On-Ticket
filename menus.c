@@ -3,6 +3,7 @@
 #include "cadastro.h"
 #include "menus.h"
 #include "usuarios.h"
+#include "reserva.h"
 
 
 #ifdef _WIN32
@@ -69,7 +70,7 @@ void printMenuUsuario()
   printf("5: Logoff.\n");
 }
 
-int MenuUsuario( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos)
+int MenuUsuario( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos, ReservasUser *reservas)
 {
   system("clear");
   int n;
@@ -91,6 +92,7 @@ int MenuUsuario( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos
           break;
 
         case 2 :
+          obterReserva(reservas,*usuario,ingressos, shows);
           break;
 
         case 3 :
