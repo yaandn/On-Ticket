@@ -102,6 +102,7 @@ void imprimirReservas(ReservasUser reservas[], ListaIngressos *ingressos , TipoU
         getchar();
         getchar();
         return;
+        //aaaa
     }
 
     PonteiroIngressos aux =  ingressos->ptr_primeiro;
