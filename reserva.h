@@ -10,36 +10,22 @@
 typedef struct reserva
 {
     int id;
-    int codigo;
-    Ingressos *ingresso;
     
 }TipoReserva;
 
 typedef struct reservaUser{
-    int indice;
+    int codIngresso;
+    //Ingressos *ingresso;
     TipoReserva reservas[TAM];
 }ReservasUser;
 
-// typedef Reserva *PonteiroReserva;
 
+void inicializaReserva(ReservasUser *reserva);
 
-// typedef struct FilaReserva
-// {
-//     PonteiroReserva ptr_primeiro;
-//     PonteiroReserva ptr_fim;
-// }FilaReserva;
+void StartReserva( ReservasUser reserva[], PonteiroIngressos ingresso);
 
-// void IniciarFilaReserva(FilaReserva *fila);
+void obterReserva(ReservasUser reserva[], TipoUser usuario, ListaIngressos *ingressos, ListaShows *shows);
 
-// void CadastrarReserva(FilaReserva *fila, TipoUser usuario);
-
-// //void RetiraReserva(FilaReserva *fila,  TipoUser usuario);
-
-// void ImprimirFilaReservas(FilaReserva *fila);
-
-ReservasUser* inicializaReserva(ReservasUser *reserva);
-
-void obterReserva(ReservasUser *reserva,TipoUser usuario, ListaIngressos *ingressos, ListaShows *shows);
-void imprimirReservas(ReservasUser reservas);
+void imprimirReservas(ReservasUser reservas[], ListaIngressos *ingressos , TipoUser usuario);
 
 #endif

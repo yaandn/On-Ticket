@@ -15,12 +15,15 @@ int main()
   ListaUsers users;
   ListaUsers admins;
   TipoUser usuario = NULL;
-  ReservasUser *reservas;
+  ReservasUser reservas[10];
   
 
   iniciaListaUsuarios(&users);
   iniciaListaUsuarios(&admins);
-  reservas = inicializaReserva(reservas);
+
+  int i;
+  for(i=0;i<10;i++)
+    inicializaReserva(&(reservas[i]));
   
 
   ListaShows shows;
@@ -64,7 +67,7 @@ int main()
     //entra no programa como um administrador
     if (usuario != NULL && usuario->usuario.privilegio==1)
     {
-      if (MenuAdmin( &usuario, &shows, &ingressos) )
+      if (MenuAdmin( &usuario, &shows, &ingressos, reservas) )
         break;
     }
   }

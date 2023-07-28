@@ -22,7 +22,7 @@ int login( ListaUsers *users, ListaUsers *admins, TipoUser *usuario );
 //4 faz logoff do sistema
 void printMenuUsuario();
 //processa a escolha feito pelo usuario logado
-int MenuUsuario( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos, ReservasUser *reservas);
+int MenuUsuario( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos, ReservasUser reserva[]);
 
 //caso o usuario tenha escolhido alterar os dados aparece este menu
 //1 para alterar o nome
@@ -41,7 +41,7 @@ void MenuAlteraDados( TipoUser *usuario );
 //4 faz logoff do sistema
 void printMenuAdmin();
 //processa a escolha feito pelo usuario logado caso ele seja admin
-int MenuAdmin( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos);
+int MenuAdmin( TipoUser *usuario, ListaShows *shows, ListaIngressos *ingressos, ReservasUser reserva[]);
 
 void printMenuCadastraShow();
 

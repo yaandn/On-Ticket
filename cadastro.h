@@ -57,7 +57,7 @@ void iniciaListaIngressos(ListaIngressos *lista);
 
 void adicionarShow(ListaShows *lista, Show show);
 
-void adicionarIngresso(ListaIngressos *lista, ListaShows *shows);
+PonteiroIngressos adicionarIngresso(ListaIngressos *lista, ListaShows *shows);
 
 void imprimirShows(ListaShows *lista, ListaIngressos *listaingressoss);
 

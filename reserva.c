@@ -4,122 +4,173 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void inicializaReserva(ReservasUser *reserva)
+{
+    int i;
+    for (i = 0; i < TAM; i++)
+    {
+        reserva->reservas[i].id = 0;
+    }
+    reserva->codIngresso = 0;
+}
 
-// void IniciarFilaReserva(FilaReserva *fila)
-// {
-//     fila->ptr_primeiro = NULL;
-//     fila->ptr_fim = NULL;
-// };
 
-// void CadastrarReserva(FilaReserva *fila, TipoUser usuario)
-// {
-//     PonteiroReserva novo = (PonteiroReserva) malloc(sizeof(Reserva));
 
-//     novo->reserva.cod = 0;
-//     novo->reserva.Id = usuario->usuario.Id;
-//     novo->ptr_prox = NULL;
+void StartReserva(ReservasUser reserva[], PonteiroIngressos ingresso)
+{
+    if (ingresso == NULL)
+        return;
 
-//     if(fila->ptr_primeiro == NULL)
-//     {
-//         novo->reserva.cod = 1;
-//         fila->ptr_primeiro = novo;
-//         fila->ptr_fim = novo;
-//     } else
-//     {
-//         novo->reserva.cod = 1 + fila->ptr_fim->reserva.cod;
-//         fila->ptr_fim->ptr_prox = novo;
-//         fila->ptr_fim = novo;
-//     }
+    int i;
+    for (i = 0; i < TAM; i++)
+    {
+        if (reserva[i].codIngresso == 0)
+        {
+            reserva[i].codIngresso = ingresso->codIngresso;
+            for (int j = 0; j < TAM; j++)
+            {
+                reserva[i].reservas[j].id = 0;
+            }
+            break;
+        }
+    }
 
-// };
-
-// void RetiraReserva(FilaReserva *fila, int cod)
-// {
-//     PonteiroReserva aux1 = fila->ptr_primeiro;
-//     PonteiroReserva aux2 = NULL;
-
-//     while (aux1 != NULL)
-//     {
-//         if (aux1->reserva.cod == cod) break;
-
-//         aux2 = aux1;
-//         aux1 = aux1->ptr_prox;
-//     }
-
-//     if (aux1 == fila->ptr_primeiro) 
-//     {
-//         fila->ptr_primeiro = aux1->ptr_prox;
-//         if (fila->ptr_primeiro == NULL) fila->ptr_fim = NULL;
-//     } else
-//     {
-//         aux2->ptr_prox = aux1->ptr_prox;
-//     }
     
-//     free(aux1);
-// }
-
-// void ImprimirFilaReservas(FilaReserva *fila)
-// {
-//     PonteiroReserva aux = fila->ptr_primeiro;
-
-//     while( aux!=NULL )
-//     {
-//         printf("", aux->reserva.user);
-//         aux = aux->ptr_prox;
-//     }
-// };
-
-ReservasUser* inicializaReserva(ReservasUser *reserva) {
-  reserva = (ReservasUser *) malloc(sizeof(ReservasUser));
-  reserva ->indice = 0;
-  return reserva;
 }
 
-void obterReserva(ReservasUser *reserva, TipoUser usuario,ListaIngressos *ingressos, ListaShows *shows) {
-  TipoReserva novaReserva;
 
-  if (reserva->indice >= 10) {
-    printf("Número máximo de reservas atingido\n");
-    printf("Pressione ENTER para retornar...\n");
+void obterReserva(ReservasUser reserva[], TipoUser usuario, ListaIngressos *ingressos, ListaShows *shows)
+{
+    system("clear");
+    printf("\n============================================\n");
+    printf("\n             OBTENÇÃO DE RESERVAS              \n");
+    printf("\n============================================\n");
+    if (shows->ptr_primeiro == NULL)
+    {
+        printf("\nNão há shows cadastrados.\n");
+        printf("\nAperte ENTER para retornar...\n");
+        getchar();
+        getchar();
+        return;
+    }
+
+    PonteiroIngressos ingressoEscolhido = escolherIngresso(ingressos, shows);
+
+    int i;
+    for (i = 0; i < TAM; i++)
+    {
+        if (reserva[ingressoEscolhido->codIngresso].reservas[i].id == 0)
+        {
+            reserva[ingressoEscolhido->codIngresso].reservas[i].id = usuario->usuario.Id;
+            int j;
+            for (j = 0; j < 10; j++)
+            {
+                if (usuario->usuario.meusIngresso[j] == 0)
+                {
+                    usuario->usuario.meusIngresso[j] = ingressoEscolhido->codIngresso;
+                    break;
+                }
+                if (j == 9)
+                {
+                    printf("\nAlcançou o limite de reservas!\n");
+                }
+            }
+            break;
+        }
+    }
+
+    printf("\n>> Reserva obtida com sucesso <<\n\nAperte ENTER para retornar...");
     getchar();
     getchar();
-    return;
-  }
-
-  PonteiroIngressos ingressoEscolhido = escolherIngresso(ingressos, shows);
-
-  novaReserva.id = usuario->usuario.Id;
-  novaReserva.ingresso = ingressoEscolhido;
-  
-  if(reserva->indice == 0) {
-    novaReserva.codigo = 1;
-    reserva->indice++;
-  } else {
-    novaReserva.codigo++;
-    reserva->indice++;
-  }
-
-  reserva->reservas[reserva->indice] = novaReserva;
-  printf("Reserva obtida com sucesso, aperte ENTER para ratornar\n");
-  getchar();
-  getchar();
-  
-  return;
-}
-
-void imprimirReservas(ReservasUser reservas) {
-  int totalReservas = reservas.indice;
-  int i;
-  TipoReserva reservaAtual;
-  printf("\nReservas Obtidas:\n");
-  for(i=0; i< totalReservas; i++) {
-    reservaAtual = reservas.reservas[i];
-    printf("Código: %d\n", reservaAtual.codigo);
-    printf("Artista: %s\n", reservaAtual.ingresso->show->artista);
-    printf("Tipo do Ingresso: %s\n", reservaAtual.ingresso->tipo);
-    printf("Preço do ingresso: R$ %.2f\n", reservaAtual.ingresso->preco);
-    printf("Data 0%d/0%d/%d", reservaAtual.ingresso->show->dia.dia, reservaAtual.ingresso->show->dia.mes, reservaAtual.ingresso->show->dia.ano);
-  }
 }
 
 
+
+void imprimirReservas(ReservasUser reservas[], ListaIngressos *ingressos , TipoUser usuario)
+{
+    system("clear");
+    printf("\n============================================\n");
+    printf("\n             RESERVAS OBTIDAS              \n");
+    printf("\n============================================\n");
+    int i = 0;
+    int j;
+
+    if (usuario->usuario.meusIngresso[0] == 0)
+    {
+        printf("\nVocê ainda não realizou nenhuma reserva :(\n");
+        printf("\nAperte ENTER para retornar...\n");
+        getchar();
+        getchar();
+        return;
+    }
+
+    PonteiroIngressos aux =  ingressos->ptr_primeiro;
+
+    for(i=0;i<10;i++)
+    {
+        
+        int codIngresso = usuario->usuario.meusIngresso[i];
+        if(codIngresso == 0 ) break;
+
+        while(aux!=NULL && aux->codIngresso!=reservas[i].codIngresso)
+        {
+            aux = aux->ptr_prox;
+        }
+
+        for (j = 0; j < TAM; j++)
+        {
+            
+            if (reservas[codIngresso].reservas[j].id != 0)
+                {
+                    printf("\nCódigo: %d\n", reservas[codIngresso].reservas[j].id);
+                    printf("Artista: %s\n", aux->show->artista);
+                    printf("Local: %s\n", aux->show->local);
+                    printf("Tipo do Ingresso: %s\n", aux->tipo);
+                    printf("Preço do ingresso: R$ %.2f\n", aux->preco);
+                    printf("Data: %02d/%02d/%d\n",
+                           aux->show->dia.dia,
+                           aux->show->dia.mes,
+                           aux->show->dia.ano);
+                    printf("------------------------------------------------------\n");
+                }
+        }
+    }
+
+    printf("\nPressione enter para voltar...\n");
+    getchar();
+    getchar();
+}
+
+
+
+//void imprimirReservas(ReservasUser reservas[], TipoUser usuario)
+//{
+//  int i;
+//  for(i=0;i<10;i++)
+//  if (usuario->usuario.meusIngresso[0] == 0)
+//  {
+//    printf("\nVocê ainda não realizou nenhuma reserva :(\n");
+//    printf("\nAperte ENTER para retornar...\n");
+//    getchar();
+//    getchar();
+//    return;
+//  }
+//
+//
+//  printf("\nReservas Obtidas:\n");
+//  for (i = 1; i <= totalReservas; i++)
+//  {
+//
+//    printf("\nCódigo: %d\n", reservas->reservas[i].codigo);
+//    printf("Artista: %s\n", reservas->reservas[i].ingresso->show->artista);
+//    printf("Local: %s\n", reservas->reservas[i].ingresso->show->local);
+//    printf("Tipo do Ingresso: %s\n", reservas->reservas[i].ingresso->tipo);
+//    printf("Preço do ingresso: R$ %.2f\n", reservas->reservas[i].ingresso->preco);
+//    printf("Data 0%d/0%d/%d\n", reservas->reservas[i].ingresso->show->dia.dia, reservas->reservas[i].ingresso->show->dia.mes, reservas->reservas[i].ingresso->show->dia.ano);
+//  }
+//
+//  printf("\nPressione enter para voltar...\n");
+//  getchar();
+//  getchar();
+//  return;
+//}

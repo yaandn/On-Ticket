@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 //dados para fazer login
 //receberá dados de CPF uma senha para acesso ao sistema e o nome do usuario
 //Id será uma lista numerica ordenada para ser utilizada no sistema
@@ -15,6 +16,9 @@ typedef struct Dados
     char nome[32];
     int Id;
     int privilegio;
+
+    int meusIngresso[10];
+
 }Dados;
 
 //Cria as celulas para o tipo lista

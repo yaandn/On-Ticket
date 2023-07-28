@@ -50,20 +50,41 @@ void adicionarShow(ListaShows *lista, Show show)
         lista->ptr_ultimo->ptr_prox = novo;
         lista->ptr_ultimo = novo;
     }
+
+    printf("\n\n>>> Show cadastrado com sucesso <<<\n\nAperte ENTER para retornar...");
+    getchar();
+    
 }
 
-void adicionarIngresso(ListaIngressos *lista, ListaShows *shows)
+PonteiroIngressos adicionarIngresso(ListaIngressos *lista, ListaShows *shows)
 {
+  system("clear");
+  printf("\n================================================\n");
+  printf("\n             CADASTRO DE INGRESSOS              \n");
+  printf("\n================================================\n");
+
+  if(shows->ptr_primeiro == NULL) {
+    printf("\nNão há Shows cadastrados.\n\nAperte enter para retornar...");
+    getchar();
+    getchar();
+    return NULL;
+  }
     PonteiroIngressos novo = (PonteiroIngressos)malloc(sizeof(struct Ingressos));
     if (novo == NULL)
     {
         printf("Erro de alocação de memória.\n");
-        return;
+        return NULL;
     }
 
     PonteiroShow show = escolherShow(shows);
     
     novo->show = show;
+
+    if(show == NULL) {
+      printf("\nShow não encontrado, aperte ENTER para escolher novamente...");
+      getchar();
+      getchar();
+    }
 
     Ingressos ingresso = lerIngresso();
 
@@ -85,10 +106,13 @@ void adicionarIngresso(ListaIngressos *lista, ListaShows *shows)
         lista->ptr_ultimo = novo;
     }
 
+   
+
     int i;
     if(show->codigoIngresso[10]!=0)
     {
-        printf("Nao e possivel cadastrar mais ingressos!\n");
+        printf("Não é possivel cadastrar mais ingressos!\n");
+        return NULL;
     } else
     {
         for(i=0; i<10; i++)
@@ -100,21 +124,31 @@ void adicionarIngresso(ListaIngressos *lista, ListaShows *shows)
             }
         }
     }
+
+    printf("\n\n>>> Ingresso cadastrado com sucesso <<<\n\nAperte ENTER para retornar...");
+    getchar();
+    
+    return lista->ptr_ultimo;
+    
 }
 
 void imprimirShows(ListaShows *lista, ListaIngressos *listaingressos)
 {
+  system("clear");
+  printf("\n============================================\n");
+  printf("\n             TELA DE SHOWS             \n\n");
+  printf("============================================\n\n");
     PonteiroShow atual = lista->ptr_primeiro;
 
     if (atual == NULL)
     {
-        printf("Não há shows cadastrados.\n");
+        printf("\nNão há shows cadastrados.\n");
         return;
     }
 
     while (atual != NULL)
     {
-        printf("Codigo do Show: %d\n", atual->codShow);
+        printf("Código do Show: %d\n", atual->codShow);
         printf("Artista: %s\n", atual->artista);
         printf("Data: %d/%d/%d\n", atual->dia.dia, atual->dia.mes, atual->dia.ano);
         printf("Local: %s\n", atual->local);
@@ -133,10 +167,12 @@ void imprimirShows(ListaShows *lista, ListaIngressos *listaingressos)
         {
             printf("Ingressos:\n");
             imprimirIngressos(listaingressos, atual->codigoIngresso);
+            printf("--------------------------------------------\n");
         }
         else
         {
             printf("Este show não possui ingressos cadastrados.\n");
+            printf("--------------------------------------------\n");
         }
 
         printf("\n");
@@ -254,7 +290,7 @@ Show lerShow()
 {
     Show novo;
 
-    printf("Digite o nome do artista: ");
+    printf("\nDigite o nome do artista: ");
     scanf(" %19[^\n]%*c", novo.artista);
     printf("Digite a data do show:\n");
     lerData(&(novo.dia));
@@ -269,7 +305,7 @@ Ingressos lerIngresso()
 {
     Ingressos novo;
 
-    printf("Digite o tipo de ingresso: ");
+    printf("\nDigite o tipo de ingresso: ");
     scanf("%11s%*c", novo.tipo);
 
     printf("Digite o preço do ingresso: ");
@@ -287,16 +323,16 @@ PonteiroShow escolherShow(ListaShows *lista)
     PonteiroShow atual = lista->ptr_primeiro;
 
     // Exibe a lista de shows cadastrados
-    printf("Lista de Shows:\n");
+    printf("\nLista de Shows:\n\n");
     while (atual != NULL)
     {
-        printf("%d. %s - %d/%d/%d\n",
+        printf("%d. %s - 0%d/0%d/0%d\n",
          atual->codShow, atual->artista, atual->dia.dia, atual->dia.mes, atual->dia.ano);
         atual = atual->ptr_prox;
     }
 
     // Solicita a escolha do show ao usuário
-    printf("Escolha o número do show: ");
+    printf("\nEscolha o número do show: ");
 
     while (scanf("%d", &opcao) != 1) 
     {
@@ -313,7 +349,7 @@ PonteiroShow escolherShow(ListaShows *lista)
 
     if (atual == NULL)
     {
-        printf("Opção inválida.\n");
+      
         return NULL;
     }
     else
@@ -325,25 +361,16 @@ PonteiroShow escolherShow(ListaShows *lista)
 PonteiroIngressos escolherIngresso(ListaIngressos *Ingressos, ListaShows *Shows) {
   PonteiroShow showEscolhido = escolherShow(Shows);
   int codigoEscolhido;
-  printf("\nSelecione o tipo de ingresso:\n");
+  printf("-------------------------------------------------\n");
+  printf("\nLista de ingressos disponíveis:\n\n");
 
-  //percorrer a lista de ingressos até achar os ingressos do show escolhido
-  PonteiroIngressos atual = Ingressos->ptr_primeiro;
-
-  while (atual != NULL) {
-    if(atual->codIngresso == showEscolhido->codShow) {
-      printf("%d-", atual->codIngresso);
-      printf("  Tipo do ingresso: %s\n", atual->tipo);
-      printf("  Preço: R$ %.2f\n", atual->preco);
-    }
-
-    atual = atual->ptr_prox;
-  }
-
+  imprimirIngressos(Ingressos, showEscolhido->codigoIngresso);
+  
+  printf("\nSelecione o código do tipo desejado:");
   scanf("%d", &codigoEscolhido);
 
   //percorrer a lista de ingressos para encontar o ingresso escolhido pelo usuario e o retornar
-  atual = Ingressos->ptr_primeiro;
+  PonteiroIngressos atual = Ingressos->ptr_primeiro;
 
   while (atual != NULL) {
     if(atual->codIngresso == codigoEscolhido) {

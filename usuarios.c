@@ -1,10 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <termios.h>
 #include "usuarios.h"
 #include "menus.h"
 #include "cadastro.h"
 
+// Função para desabilitar o eco do teclado
+void disable_echo() {
+    struct termios term;
+    tcgetattr(0, &term);
+    term.c_lflag &= ~ECHO;
+    tcsetattr(0, TCSANOW, &term);
+}
+
+// Função para habilitar o eco do teclado novamente
+void enable_echo() {
+    struct termios term;
+    tcgetattr(0, &term);
+    term.c_lflag |= ECHO;
+    tcsetattr(0, TCSANOW, &term);
+}
 
 // inicializacao da lista de usuarios
 void iniciaListaUsuarios(ListaUsers *lista)
@@ -28,7 +44,7 @@ TipoUser buscaCPF(char cpf[], ListaUsers *lista)
     {
         if (strcmp(cpf, aux->usuario.cpf) == 0)
         {
-            printf("CPF encontrado.\n");
+            //printf("CPF encontrado.\n");
             return aux;
         }
         aux = aux->ptr_prox;
@@ -77,12 +93,16 @@ int checaCPFCadastrado(char cpf[], ListaUsers *lista)
 //retorna 0 caso o cadastro tenha sido realizado com sucesso
 int cadastraUsuarios( ListaUsers *lista )
 {
+    system("clear");
+    printf("\n============================================\n");
+    printf("\n             TELA DE CADASTRO             \n\n");
+    printf("==============================================\n");
     TipoUser novo = (TipoUser) malloc(sizeof(Users));
     if (novo == NULL) {
         printf("Erro de alocação de memória.\n");
         return 1;
     }
-    printf("\nDigite o numero do CPF\n");
+    printf("\nDigite o numero do CPF:");
     scanf("%11s%*c", novo->usuario.cpf);
     
     if(checaCPFCadastrado(novo->usuario.cpf, lista))
@@ -90,9 +110,9 @@ int cadastraUsuarios( ListaUsers *lista )
         return 1;
     };
 
-    printf("Digite uma senha\n");
+    printf("Digite uma senha:");
     scanf("%11s%*c", novo->usuario.senha);
-    printf("Digite o seu nome completo\n");
+    printf("Digite o seu nome completo:");
     scanf("%31[^\n]%*c", novo->usuario.nome);
     if(listaUsuariosVazia (lista)) novo->usuario.Id = 1;
     else
@@ -101,9 +121,20 @@ int cadastraUsuarios( ListaUsers *lista )
     }
     novo->usuario.privilegio = 0;
 
+    int i;
+    for(i=0;i<10;i++)
+    {
+        novo->usuario.meusIngresso[i] = 0;
+    }
+    
     novo->ptr_prox = NULL;
     lista->ptr_ultimo->ptr_prox = novo;
     lista->ptr_ultimo = novo;
+    printf("Cadastro realizado com sucesso.\n\n");
+    printf("Seja bem-vindo, %s!\n", novo->usuario.nome);
+    printf("\nAperte Enter para continuar...");
+    getchar();  // Captura o Enter pressionados
+   
     return 0;
 };
 
@@ -111,9 +142,13 @@ int cadastraUsuarios( ListaUsers *lista )
 //função para fazer login no sistema
 TipoUser fazerLogin(ListaUsers *lista1, ListaUsers *lista2)
 {
+    system("clear");
+    printf("\n============================================\n");
+    printf("\n               TELA DE LOGIN            \n\n");
+    printf("============================================\n");  
     int tentativa = 0;
     Dados novo;
-    printf("\nDigite o numero do CPF:\n");
+    printf("\nDigite o numero do CPF:");
     scanf("%s", novo.cpf);
 
     TipoUser usuarioEncontrado = buscaCPF(novo.cpf, lista2);
@@ -126,18 +161,23 @@ TipoUser fazerLogin(ListaUsers *lista1, ListaUsers *lista2)
     {
         if( usuarioEncontrado == NULL )
         {
-            printf("CPF nao encontrado, faca cadastro para prosseguir.\n");
+            printf("\nCPF nao encontrado, faça cadastro para prosseguir.\n\n");
+            printf("Aperte ENTER para retornar...");
+            getchar();
+            getchar();
             break;
         }
         if (usuarioEncontrado)
         {
-            printf("Digite uma senha:\n");
+            printf("Digite uma senha:");
+            disable_echo(); // Desabilita o eco do teclado
             scanf("%s", novo.senha);
+            enable_echo(); // Habilita o eco do teclado novamente
 
             if (strcmp(novo.senha, usuarioEncontrado->usuario.senha) == 0)
             {
-                printf("Login realizado com sucesso!\n");
-                printf("Bem-vindo, %s!\n", usuarioEncontrado->usuario.nome);
+                printf("\n\nLogin realizado com sucesso!\n\n");
+                printf("Seja bem-vindo, %s!\n\n", usuarioEncontrado->usuario.nome);
                 printf("\nAperte Enter para continuar...");
                 getchar();  // Captura o Enter pressionado
                 getchar();  // Pausa até o Enter ser pressionado novamente
@@ -145,8 +185,8 @@ TipoUser fazerLogin(ListaUsers *lista1, ListaUsers *lista2)
             }
             else
             {
-                printf("Senha incorreta. Login falhou.\n");
-                printf("Digite a senha novamente\n");
+                printf("\n\nFalha no Login -> Senha Incorreta.\n");
+                printf("\nDigite a senha novamente\n\n");
             }
         }
         tentativa++;
@@ -262,16 +302,22 @@ void carregarDadosUsuarios(ListaUsers *lista1, ListaUsers *lista2, FILE *arquivo
 void alteraNome( TipoUser *usuario )
 {
     char nome[32];
-    printf("\nDigite o novo nome do usuario\n");
+    printf("\nDigite o novo nome do usuario:");
     scanf(" %[^\n]%*c", nome);
     strcpy( (*usuario)->usuario.nome, nome);
+    printf("\n\n>>> Nome alterado com sucesso <<<\n\nAperte ENTER para retornar...");
+    getchar();
+    
 };
 
 void alteraSenha( TipoUser *usuario )
 {
     char senha[12];
-    printf("\nDigite a nova senha\n");
+    printf("\nDigite a nova senha:");
     scanf("%s", senha);
     strcpy( (*usuario)->usuario.senha, senha);
+    printf("\n\n>>> Senha alterada com sucesso <<<\n\nAperte ENTER para retornar...");
+    getchar();
+    getchar();
 };
 
